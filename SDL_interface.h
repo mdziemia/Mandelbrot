@@ -8,5 +8,6 @@ extern SDL_Event event;
 // draw pixel on the screen
 void putpixel(int x, int y, int color);
 void clear_screen(int width, int height);
+void drawRect(int x, int y, int r, int color);
 
 #endif

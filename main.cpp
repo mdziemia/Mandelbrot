@@ -77,6 +77,10 @@ int main(int argc, char *argv[])
                 case SDL_KEYUP:
                     switch (event.key.keysym.sym)
                     {
+						case SDLK_F1:
+							printf("HELP:\n\n1) ENLARGE - click the left-top corner and then the right-bottom one.\n2) EXIT - press Esc\n  \n");
+                    		break;
+
                     	case SDLK_ESCAPE:
                     		CleanParallel();
                         	return 0;
@@ -117,7 +121,7 @@ int main(int argc, char *argv[])
                             Mouse_y = event.button.y;
                             Mouse_first = false;
 
-							//putpixel(Mouse_x, Mouse_y, 0xffffff);
+							drawRect(event.button.x, event.button.y, 2, 0xffffff);
 
                             __PRINTF("Range x %lf %lf \n", start_x, end_x);
                             __PRINTF("Range y %lf %lf \n", start_y, end_y);
@@ -126,6 +130,8 @@ int main(int argc, char *argv[])
                         else
                         {
                             __PRINTF("The Second click\n");
+
+							drawRect(event.button.x, event.button.y, 2, 0xffffff);
 
                             DOUBLE dx = (end_x - start_x)/(DOUBLE)World.Width;
                             DOUBLE dy = (end_y - start_y)/(DOUBLE)World.Height;
@@ -141,13 +147,10 @@ int main(int argc, char *argv[])
 
                             //end_x = start_x + dx * event.button.x;
                             //end_y = start_y + dy * event.button.y;
-
 							end_x = start_x + dx * (Mouse_x+rect);
                             end_y = start_y + dy * (Mouse_y+rect);
 
-
-
-                            start_x = start_x + dx * Mouse_x;
+ 							start_x = start_x + dx * Mouse_x;
                             start_y = start_y + dy * Mouse_y;
 
                             __PRINTF("Range x %lf %lf \n", start_x, end_x);
