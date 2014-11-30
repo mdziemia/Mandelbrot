@@ -5,18 +5,30 @@
 
 #define TAB(x,y,mem) *(mem+World.Width*(y)+(x))
 
-const int COLOR = 0xff0000;     // color of cells
-const int COLOR_NEW = 0x00ff00; // color of born cells
+
+const int COLOR_FG = 0x00ff00;
 const int COLOR_BG = 0x000000;
-const int COLOR_DEAD = 0x000000;
 
 SWorld World;
 
-DOUBLE start_x = -3.0, end_x = 1.0;
+DOUBLE start_x = -2.5, end_x = 1.2;
 DOUBLE start_y = -1.5, end_y = 1.5;
 
 DOUBLE parametrA = 0.3;
 DOUBLE parametrB = - 0.13;
+
+
+// ----------------------------------------------------------------------------------
+inline int getColor(int param)
+{
+	//int rest = pow(255-param, 2.0/3.0);
+
+
+	//else
+	//	rest = 0;
+
+	return (param)*256;//  + rest*65536;
+}
 
 
 
@@ -49,7 +61,7 @@ int Mandelbrot(DOUBLE _x, DOUBLE _y)
 
     DOUBLE nx, ny;
 
-    for (int i=0; i<256; ++i)
+    for (int i=0; i<128; ++i)
     {
         nx = x*x - y*y + _x;
         ny = 2*x*y + _y;
@@ -57,7 +69,7 @@ int Mandelbrot(DOUBLE _x, DOUBLE _y)
         x = nx;
         y = ny;
 
-        if (sqrtl(x*x + y*y) > 2.0) return i;
+        if (sqrtl(x*x + y*y) > 2.0) return 5*i;
     }
     return 0;
 }
@@ -85,14 +97,14 @@ void Drawing(int height_start, int height_end, int thread_id)
         	{
         		case JULIA:
         			if ((iter = Julia(start_x + x*dx,start_y + y*dy)) > 1)
-        				putpixel(x, y, COLOR_NEW*iter);
+        				putpixel(x, y, getColor(iter));
            			else
            				putpixel(x, y, COLOR_BG);
            			break;
 
 				case MANDELBROT:
 					if ((iter = Mandelbrot(start_x + x*dx,start_y + y*dy)) > 1)
-						putpixel(x, y, COLOR_NEW*iter);
+						putpixel(x, y, getColor(iter));
            			else
            				putpixel(x, y, COLOR_BG);
 					break;
