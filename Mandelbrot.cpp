@@ -11,7 +11,7 @@ const int COLOR_BG = 0x000000;
 
 SWorld World;
 
-DOUBLE start_x = -2.5, end_x = 1.2;
+DOUBLE start_x = -2, end_x = 1;
 DOUBLE start_y = -1.5, end_y = 1.5;
 
 DOUBLE parametrA = 0.3;
@@ -21,13 +21,7 @@ DOUBLE parametrB = - 0.13;
 // ----------------------------------------------------------------------------------
 inline int getColor(int param)
 {
-	//int rest = pow(255-param, 2.0/3.0);
-
-
-	//else
-	//	rest = 0;
-
-	return (param)*256;//  + rest*65536;
+	return (param << 3) << 8;
 }
 
 
@@ -40,7 +34,7 @@ int Julia(DOUBLE _x, DOUBLE _y)
 
    	DOUBLE nx, ny;
 
-    for (int i=0; i<300; ++i)
+    for (int i=0; i<255; ++i)
     {
         nx = x*x - y*y + parametrA;
         ny = 2*x*y     - parametrB;
@@ -61,7 +55,7 @@ int Mandelbrot(DOUBLE _x, DOUBLE _y)
 
     DOUBLE nx, ny;
 
-    for (int i=0; i<128; ++i)
+    for (int i=0; i<255; ++i)
     {
         nx = x*x - y*y + _x;
         ny = 2*x*y + _y;
@@ -69,7 +63,29 @@ int Mandelbrot(DOUBLE _x, DOUBLE _y)
         x = nx;
         y = ny;
 
-        if (sqrtl(x*x + y*y) > 2.0) return 5*i;
+        if (sqrtl(x*x + y*y) > 2.0) return i;
+    }
+    return 0;
+}
+
+// ----------------------------------------------------------------------------------
+int BurningShip(DOUBLE _x, DOUBLE _y)
+{
+    DOUBLE x = _x;
+    DOUBLE y = _y;
+
+    DOUBLE nx, ny;
+
+    for (int i=0; i<255; ++i)
+    {
+        nx = x*x - y*y + _x;
+		ny = (x*y<0)?(-2*x*y + _y) : (2*x*y + _y);
+
+
+        x = nx;
+        y = ny;
+
+        if (sqrtl(x*x + y*y) > 2.0) return i;
     }
     return 0;
 }
@@ -104,6 +120,13 @@ void Drawing(int height_start, int height_end, int thread_id)
 
 				case MANDELBROT:
 					if ((iter = Mandelbrot(start_x + x*dx,start_y + y*dy)) > 1)
+						putpixel(x, y, getColor(iter));
+           			else
+           				putpixel(x, y, COLOR_BG);
+					break;
+
+				case BURNING_SHIP:
+					if ((iter = BurningShip(start_x + x*dx,start_y + y*dy)) > 1)
 						putpixel(x, y, getColor(iter));
            			else
            				putpixel(x, y, COLOR_BG);

@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <mem.h>
 #include <math.h>
 #include <SDL.h>
 #include <SDL_thread.h>
@@ -15,7 +14,7 @@
 #endif
 
 
-enum MODE { MANDELBROT, JULIA };
+enum MODE { MANDELBROT, JULIA, BURNING_SHIP };
 extern enum MODE mode;
 
 // resolution of computation

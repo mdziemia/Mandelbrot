@@ -15,20 +15,25 @@
 #undef main
 
 
-// What would you like to see? Mandelbrot or Julia?
+// Press SPACE to change between fractals { MANDELBROT, JULIA, BURNING_SHIP }
 enum MODE mode = MANDELBROT;
-// mode = JULIA;
 
+
+// ------------------------------------------------------------------------------
+void Init()
+{
+	// Screen resolution
+    World.Width = 800;
+    World.Height = 800;
+    // Number of threads
+    NUM_THREADS = 4;
+}
 
 // ------------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-    // Screen resolution
-    World.Width = 800;
-    World.Height = 800;
-    // Number of threads
-    NUM_THREADS = 1;
 
+	Init();
 
     // Initialize SDL video
     if (SDL_Init(SDL_INIT_VIDEO) < 0 ) {
@@ -50,6 +55,7 @@ int main(int argc, char *argv[])
 	// Mouse
 	int Mouse_x = 0, Mouse_y = 0;
 	bool Mouse_first = true;
+	DOUBLE width, height;
 
     while (true)
     {
@@ -85,20 +91,53 @@ int main(int argc, char *argv[])
                     		CleanParallel();
                         	return 0;
 
+						case SDLK_SPACE:
+							if (mode == BURNING_SHIP) mode = MANDELBROT;
+							else if (mode == MANDELBROT) mode = JULIA;
+							else if (mode == JULIA) mode = BURNING_SHIP;
+							break;
+
+						case SDLK_w:
+							parametrA += 0.005;
+							break;
+						case SDLK_s:
+							parametrA -= 0.005;
+							break;
+						case SDLK_d:
+							parametrB += 0.005;
+							break;
+						case SDLK_a:
+							parametrB -= 0.005;
+							break;
+
+
+						case SDLK_r:
+							start_x = -2, end_x = 1;
+							start_y = -1.5, end_y = 1.5;
+							break;
+
 						case SDLK_LEFT:
-							parametrA += 0.01;
+							width = (end_x - start_x)/4.0;
+							start_x -= width;
+							end_x -= width;
 							break;
 
 						case SDLK_RIGHT:
-							parametrA -= 0.01;
+							width = (end_x - start_x)/4.0;
+							start_x += width;
+							end_x += width;
                         	break;
 
 						case SDLK_UP:
-                        	parametrB += 0.01;
+							height = (end_y - start_y)/4.0;
+							start_y -= height;
+							end_y -= height;
                         	break;
 
 						case SDLK_DOWN:
-							parametrB -= 0.01;
+							height = (end_y - start_y)/4.0;
+							start_y += height;
+							end_y += height;
 							break;
                     }
 
@@ -167,8 +206,6 @@ int main(int argc, char *argv[])
 				// ----------------------------
                 case SDL_QUIT:
                 {
-
-                    CleanParallel();
                     return 0;
                 }
 
