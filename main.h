@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <SDL.h>
-#include <SDL_thread.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_thread.h>
 
 #ifdef __DEBUG
 	#define __PRINTF	printf
